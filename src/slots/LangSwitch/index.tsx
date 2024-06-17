@@ -18,19 +18,13 @@ const LangSwitch: FC = () => {
 
   const handleLangChange = useCallback(
     (lang: string) => {
-      let path = getTargetLocalePath({
+      const path = getTargetLocalePath({
         pathname,
         current,
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         target: locales.find(({ id }) => id === lang)!
       });
 
-      // 多多语言首页做特殊处理 eg. /index-en
-      if (path.startsWith('/-')) {
-        path = `/index${path.substring(1)}`;
-      } else if (path.endsWith('/index')) {
-        path = path.replace('/index', '/');
-      }
       history.push({
         pathname: path,
         search: searchParams.toString()

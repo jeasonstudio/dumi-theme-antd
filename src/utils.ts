@@ -17,9 +17,18 @@ export function getTargetLocalePath({
       ? pathname.replace(current.base.replace(/\/$/, ''), '')
       : pathname.replace(new RegExp(`${current.suffix}$`), '');
 
-  return 'base' in target
-    ? `${target.base}${clearPath}`.replace(/^\/\//, '/')
-    : `${clearPath}${target.suffix}`;
+  let result =
+    'base' in target
+      ? `${target.base}${clearPath}`.replace(/^\/\//, '/')
+      : `${clearPath}${target.suffix}`;
+
+  // 多语言首页做特殊处理 eg. /index-en
+  if (result.startsWith('/-')) {
+    result = `/index${result.substring(1)}`;
+  } else if (result.endsWith('/index')) {
+    result = result.replace('/index', '/');
+  }
+  return result;
 }
 
 // 删除标题中的 HTML 标签

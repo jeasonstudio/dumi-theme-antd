@@ -122,18 +122,16 @@ export default function Navigation({ isMobile, responsive }: NavigationProps) {
     if (locales.length < 2) {
       return null;
     }
+
     if (locales.length === 2) {
       const nextLang = locales.filter((item) => item.id !== locale.id)[0];
       const nextPath = getTargetLocalePath({
         current: locale,
-        target: nextLang
+        target: nextLang,
+        pathname
       });
       return {
-        label: (
-          <a rel="noopener noreferrer" href={nextPath}>
-            {nextLang.name}
-          </a>
-        ),
+        label: <Link to={nextPath}>{nextLang.name}</Link>,
         key: nextLang.id
       };
     }
@@ -145,19 +143,16 @@ export default function Navigation({ isMobile, responsive }: NavigationProps) {
         .map((item) => {
           const nextPath = getTargetLocalePath({
             current: locale,
-            target: item
+            target: item,
+            pathname
           });
           return {
-            label: (
-              <a rel="noopener noreferrer" href={nextPath}>
-                {item.name}
-              </a>
-            ),
+            label: <Link to={nextPath}>{item.name}</Link>,
             key: item.id
           };
         })
     };
-  }, [locale, locales]);
+  }, [locale, locales, pathname]);
 
   let additional: MenuProps['items'];
   const additionalItems: MenuProps['items'] = [
