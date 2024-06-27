@@ -6,6 +6,7 @@ import GlobalStyles from '../../common/GlobalStyles';
 import useLocaleValue from '../../hooks/useLocaleValue';
 import Footer from '../../slots/Footer';
 import Header from '../../slots/Header';
+import Contributors from '../../slots/Content/Contributors';
 import Homepage from '../HomePageLayout';
 import SidebarLayout from '../SidebarLayout';
 import SiteContext from '../../slots/SiteContext';
@@ -52,6 +53,7 @@ const DocLayout: FC = () => {
     ) : (
       <SidebarLayout>
         <Outlet />
+        <Contributors filename={routeMeta.frontmatter.filename} />
       </SidebarLayout>
     );
   }, [outlet, pathname, routeMeta]);
