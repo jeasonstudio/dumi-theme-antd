@@ -3,6 +3,7 @@ import { CompactTheme, DarkTheme } from 'antd-token-previewer/lib/icons';
 import { FormattedMessage } from 'dumi';
 import React from 'react';
 import ThemeIcon from './ThemeIcon';
+import useThemeAnimation from '../../hooks/useThemeAnimation';
 
 export type ThemeName = 'light' | 'dark' | 'compact';
 
@@ -13,14 +14,24 @@ export type ThemeSwitchProps = {
 
 const ThemeSwitch: React.FC<ThemeSwitchProps> = (props: ThemeSwitchProps) => {
   const { value = ['light'], onChange } = props;
+  const toggleAnimationTheme = useThemeAnimation();
+  const isDark = value.includes('dark');
   return (
     <FloatButton.Group trigger="click" icon={<ThemeIcon />}>
       <FloatButton
         icon={<DarkTheme />}
-        type={value.includes('dark') ? 'primary' : 'default'}
-        onClick={() => {
-          const themeValue = value.includes('dark') ? 'light' : 'dark';
-          onChange([themeValue, ...value.filter((item) => ['dark', 'light'].indexOf(item) < 0)]); // compact 值必须放在靠后位置
+        type={isDark ? 'primary' : 'default'}
+        onClick={async (e) => {
+          // Toggle animation when switch theme
+          toggleAnimationTheme(e, isDark);
+          await new Promise((resolve) => {
+            setTimeout(resolve, 1000 / 60);
+          });
+          if (isDark) {
+            onChange(value.filter((theme) => theme !== 'dark'));
+          } else {
+            onChange([...value, 'dark']);
+          }
         }}
         tooltip={<FormattedMessage id="app.theme.switch.dark" />}
       />
